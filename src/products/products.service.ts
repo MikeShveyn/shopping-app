@@ -15,7 +15,6 @@ export class ProductsService {
         private readonly productModel: typeof Product,
         @InjectModel(Order)
         private readonly orderModel: typeof Order,
-        private sequelize: Sequelize
       ) {}
 
       /**
@@ -160,46 +159,46 @@ export class ProductsService {
        * 
        * @returns 
        */
-      async getOverallStatistics() {
-        const totalProducts = await this.productModel.count();
-        const availableProducts = await this.productModel.count({ where: { quantity: { [Op.gt]: 0 } } });
+    //   async getOverallStatistics() {
+    //     const totalProducts = await this.productModel.count();
+    //     const availableProducts = await this.productModel.count({ where: { quantity: { [Op.gt]: 0 } } });
       
-        const totalRevenue = await this.orderModel.sum('totalPrice');
+    //     const totalRevenue = await this.orderModel.sum('totalPrice');
       
-        const topProducts = await this.productModel.findAll({
-          order: [['soldCount', 'DESC']],
-          limit: 5,
-          attributes: ['productName', 'soldCount'],
-        });
+    //     const topProducts = await this.productModel.findAll({
+    //       order: [['soldCount', 'DESC']],
+    //       limit: 5,
+    //       attributes: ['productName', 'soldCount'],
+    //     });
       
-        const topSellers = await this.productModel.findAll({
-          attributes: [
-            'userId',
-            [this.sequelize.fn('SUM', this.sequelize.col('soldCount')), 'totalSold'],
-          ],
-          group: ['userId'],
-          order: [[this.sequelize.fn('SUM', this.sequelize.col('soldCount')), 'DESC']],
-          limit: 5,
-        });
+    //     const topSellers = await this.productModel.findAll({
+    //       attributes: [
+    //         'userId',
+    //         [this.sequelize.fn('SUM', this.sequelize.col('soldCount')), 'totalSold'],
+    //       ],
+    //       group: ['userId'],
+    //       order: [[this.sequelize.fn('SUM', this.sequelize.col('soldCount')), 'DESC']],
+    //       limit: 5,
+    //     });
       
-        const topBuyers = await this.orderModel.findAll({
-          attributes: [
-            'userId',
-            [this.sequelize.fn('SUM', this.sequelize.col('quantity')), 'totalBought'],
-          ],
-          group: ['userId'],
-          order: [[this.sequelize.fn('SUM', this.sequelize.col('quantity')), 'DESC']],
-          limit: 5,
-        });
+    //     const topBuyers = await this.orderModel.findAll({
+    //       attributes: [
+    //         'userId',
+    //         [this.sequelize.fn('SUM', this.sequelize.col('quantity')), 'totalBought'],
+    //       ],
+    //       group: ['userId'],
+    //       order: [[this.sequelize.fn('SUM', this.sequelize.col('quantity')), 'DESC']],
+    //       limit: 5,
+    //     });
       
-        return {
-          totalProducts,
-          availableProducts,
-          totalRevenue,
-          topProducts,
-          topSellers,
-          topBuyers,
-        };
-    }
+    //     return {
+    //       totalProducts,
+    //       availableProducts,
+    //       totalRevenue,
+    //       topProducts,
+    //       topSellers,
+    //       topBuyers,
+    //     };
+    // }
 
 }

@@ -4,6 +4,7 @@ import { ProductsService } from './products.service';
 import { ListProductsDto } from './dto/list-product.dto';
 import { Product } from './product.model';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { BuyProductDto } from './dto/buy-product.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -53,6 +54,40 @@ export class ProductsController {
       @Body() updateProductDto: UpdateProductDto
     ): Promise<Product> {
       return this.productsService.updateProduct(userId, productId, updateProductDto);
+    }
+
+
+    /**
+     * 
+     * @param userId 
+     * @param productId 
+     * @param buyProductDto 
+     * @returns 
+     */
+    @Post(':productId/buy')
+    @HttpCode(HttpStatus.OK)
+    @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+    async buyProduct(
+      @Headers('userId') userId: string,
+      @Param('productId') productId: string,
+      @Body() buyProductDto: BuyProductDto
+    ): Promise<{ message: string }> {
+      return this.productsService.buyProduct(userId, productId, buyProductDto);
+    }
+
+    /**
+     * 
+     * @param userId 
+     * @param productId 
+     * @returns 
+     */
+    @Get(':productId/statistics')
+    @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+    async getProductStatistics(
+      @Headers('userId') userId: string,
+      @Param('productId') productId: string
+    ) {
+      return this.productsService.getProductStatistics(userId, productId);
     }
 
 }

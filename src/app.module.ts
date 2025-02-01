@@ -5,14 +5,16 @@ import { ProductsModule } from './products/products.module';
 // import { OrdersModule } from './orders/orders.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { databaseConfig } from './configs/db.config';
+import { OrdersModule } from './orders/orders.module';
+import { StatisticsModule } from './statistics/statistics.module';
 
 @Module({
   imports: [
       SequelizeModule.forRoot(databaseConfig),
       UsersModule,
       ProductsModule,
-      // StatisticsModule, 
-      // OrdersModule
+      StatisticsModule, 
+      OrdersModule
     ],
   controllers: [],
   providers: [],

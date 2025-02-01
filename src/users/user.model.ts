@@ -1,24 +1,22 @@
 import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
-import { Product } from '../products/product.model';
-import { Order } from '../orders/order.model';
+// import { Product } from '../products/product.model';
+// import { Order } from '../orders/order.model';
 
-@Table
+@Table({ tableName: 'users', timestamps: true })
 export class User extends Model<User> {
   @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
   userId: string;
 
-  @Column({ allowNull: false })
+  @Column({ type: DataType.STRING, allowNull: false })
   firstName: string;
 
-  @Column({ allowNull: false })
+  @Column({ type: DataType.STRING, allowNull: false })
   lastName: string;
 
-  @Column({ allowNull: false, unique: true })
+  @Column({ type: DataType.STRING, allowNull: false, unique: true })
   username: string;
 
-  @HasMany(() => Product)
-  products: Product[];
+  // @HasMany(() => Product)  // A user can have multiple products
+  // products: Product[];
 
-  @HasMany(() => Order)
-  orders: Order[];
 }

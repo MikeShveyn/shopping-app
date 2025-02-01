@@ -1,6 +1,5 @@
 import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
-// import { Product } from '../products/product.model';
-// import { Order } from '../orders/order.model';
+import { Product } from '../products/product.model';
 
 @Table({ tableName: 'users', timestamps: true })
 export class User extends Model<User> {
@@ -16,7 +15,7 @@ export class User extends Model<User> {
   @Column({ type: DataType.STRING, allowNull: false, unique: true })
   username: string;
 
-  // @HasMany(() => Product)  // A user can have multiple products
-  // products: Product[];
+  @HasMany(() => Product)
+  products: Product[];
 
 }

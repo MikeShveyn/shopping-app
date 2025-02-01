@@ -3,6 +3,7 @@ import { InjectModel } from "@nestjs/sequelize";
 import { User } from "./user.model";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { Op } from "sequelize";
+import { Product } from "src/products/product.model";
 
 @Injectable()
 export class UsersService {
@@ -43,7 +44,8 @@ export class UsersService {
 
         const users = await this.userModel.findAll({
           where: whereClause,
-          order: [[orderColumn, 'ASC']]
+          order: [[orderColumn, 'ASC']],
+          include: [{ model: Product }] // we can not include also
         });
 
         return {users, total: users.length}

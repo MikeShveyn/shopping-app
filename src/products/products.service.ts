@@ -18,12 +18,13 @@ export class ProductsService {
       ) {}
 
       /**
-       * Cretae new Product isong userId
+       * Cretae new Product and points to userId
        * @param userId 
        * @param addProductDto 
-       * @returns 
+       * @returns productId or error
        */
       async addProduct(userId: string, addProductDto: AddProductDto): Promise<Product> {
+
         const dataToSend = {
             ...addProductDto, userId
         }
@@ -31,11 +32,11 @@ export class ProductsService {
       }
 
       /**
-       * 
+       * Update logic checks that userId is owner of product and updates data
        * @param userId 
        * @param productId 
        * @param updateProductDto 
-       * @returns 
+       * @returns Project model
        */
       async updateProduct(userId: string, productId: string, updateProductDto: UpdateProductDto): Promise<Product> {
         const product = await this.productModel.findByPk(productId);
@@ -53,10 +54,10 @@ export class ProductsService {
       }
 
       /**
-       * 
+       *  Return list of all products and total number
        * @param orderBy 
        * @param searchPhrase 
-       * @returns 
+       * @returns total number and list of projects
        */
       async listProducts(orderBy?: string, searchPhrase?: string): Promise<{ products: Product[]; total: number }> {
         let orderColumn = 'productName'; // Default sorting column
@@ -79,11 +80,11 @@ export class ProductsService {
 
 
       /**
-       * 
+       * Buy product , remove count and add it to Order Table
        * @param userId 
        * @param productId 
        * @param buyProductDto 
-       * @returns 
+       * @returns status success
        */
       async buyProduct(userId: string, productId: string, buyProductDto: BuyProductDto): Promise<{ message: string }> {
         const product = await this.productModel.findByPk(productId);
@@ -140,8 +141,8 @@ export class ProductsService {
           where: { productId },
           include: [{ model: User, attributes: ['username'] }],
         });
-    
-        const totalRevenue = orders.reduce((sum, order) => sum + order.totalPrice, 0);
+        console.log(orders)
+        const totalRevenue = orders.reduce((sum, order) => sum + Number(order.totalPrice), 0);
         const buyers = orders.map(order => order.user.username);
     
         return {
@@ -153,52 +154,5 @@ export class ProductsService {
           buyers,
         };
       }
-
-
-      /**
-       * 
-       * @returns 
-       */
-    //   async getOverallStatistics() {
-    //     const totalProducts = await this.productModel.count();
-    //     const availableProducts = await this.productModel.count({ where: { quantity: { [Op.gt]: 0 } } });
-      
-    //     const totalRevenue = await this.orderModel.sum('totalPrice');
-      
-    //     const topProducts = await this.productModel.findAll({
-    //       order: [['soldCount', 'DESC']],
-    //       limit: 5,
-    //       attributes: ['productName', 'soldCount'],
-    //     });
-      
-    //     const topSellers = await this.productModel.findAll({
-    //       attributes: [
-    //         'userId',
-    //         [this.sequelize.fn('SUM', this.sequelize.col('soldCount')), 'totalSold'],
-    //       ],
-    //       group: ['userId'],
-    //       order: [[this.sequelize.fn('SUM', this.sequelize.col('soldCount')), 'DESC']],
-    //       limit: 5,
-    //     });
-      
-    //     const topBuyers = await this.orderModel.findAll({
-    //       attributes: [
-    //         'userId',
-    //         [this.sequelize.fn('SUM', this.sequelize.col('quantity')), 'totalBought'],
-    //       ],
-    //       group: ['userId'],
-    //       order: [[this.sequelize.fn('SUM', this.sequelize.col('quantity')), 'DESC']],
-    //       limit: 5,
-    //     });
-      
-    //     return {
-    //       totalProducts,
-    //       availableProducts,
-    //       totalRevenue,
-    //       topProducts,
-    //       topSellers,
-    //       topBuyers,
-    //     };
-    // }
 
 }

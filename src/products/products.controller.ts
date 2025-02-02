@@ -1,4 +1,4 @@
-import { Body, Headers, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Headers, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, UsePipes, ValidationPipe, BadRequestException } from '@nestjs/common';
 import { AddProductDto } from './dto/add-product.dto';
 import { ProductsService } from './products.service';
 import { ListProductsDto } from './dto/list-product.dto';
@@ -15,7 +15,7 @@ export class ProductsController {
      * Add new Product using userId from Headers and data
      * @param userId 
      * @param addProductDto 
-     * @returns 
+     * @returns productId
      */
     @Post()
     @HttpCode(HttpStatus.CREATED)
@@ -24,6 +24,11 @@ export class ProductsController {
       @Headers('userId') userId: string,
       @Body() addProductDto: AddProductDto
     ): Promise<{ productId: string }> {
+
+      if (!userId) {
+        throw new BadRequestException('userId must be provided in headers');
+      }
+
       const product = await this.productsService.addProduct(userId, addProductDto);
       return { productId: product.productId };
     }
@@ -31,7 +36,7 @@ export class ProductsController {
     /**
      * Get list of products with sort and filters
      * @param listProductsDto 
-     * @returns 
+     * @returns list with total number
      */
     @Get()
     @UsePipes(new ValidationPipe({ transform: true }))
@@ -53,16 +58,19 @@ export class ProductsController {
       @Param('productId') productId: string,
       @Body() updateProductDto: UpdateProductDto
     ): Promise<Product> {
+      if (!userId) {
+        throw new BadRequestException('userId must be provided in headers');
+      }
       return this.productsService.updateProduct(userId, productId, updateProductDto);
     }
 
 
     /**
-     * 
+     * Buy Product 
      * @param userId 
      * @param productId 
      * @param buyProductDto 
-     * @returns 
+     * @returns Project model
      */
     @Post(':productId/buy')
     @HttpCode(HttpStatus.OK)
@@ -72,14 +80,17 @@ export class ProductsController {
       @Param('productId') productId: string,
       @Body() buyProductDto: BuyProductDto
     ): Promise<{ message: string }> {
+      if (!userId) {
+        throw new BadRequestException('userId must be provided in headers');
+      }
       return this.productsService.buyProduct(userId, productId, buyProductDto);
     }
 
     /**
-     * 
+     * Return Product statistics
      * @param userId 
      * @param productId 
-     * @returns 
+     * @returns statistic object
      */
     @Get(':productId/statistics')
     @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
@@ -87,6 +98,9 @@ export class ProductsController {
       @Headers('userId') userId: string,
       @Param('productId') productId: string
     ) {
+      if (!userId) {
+        throw new BadRequestException('userId must be provided in headers');
+      }
       return this.productsService.getProductStatistics(userId, productId);
     }
 

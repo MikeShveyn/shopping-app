@@ -1,12 +1,9 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
-// import { StatisticsModule } from './statistics/statistics.module';
-// import { OrdersModule } from './orders/orders.module';
+import { StatisticsModule } from './statistics/statistics.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { databaseConfig } from './configs/db.config';
-import { OrdersModule } from './orders/orders.module';
-import { StatisticsModule } from './statistics/statistics.module';
 
 @Module({
   imports: [
@@ -14,7 +11,6 @@ import { StatisticsModule } from './statistics/statistics.module';
       UsersModule,
       ProductsModule,
       StatisticsModule, 
-      OrdersModule
     ],
   controllers: [],
   providers: [],

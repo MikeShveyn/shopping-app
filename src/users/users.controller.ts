@@ -13,11 +13,9 @@ export class UsersController {
     }
 
     /**
-     * Get users with sort and filter otpions 
+     * Return users with sort and filter otpions 
      * @param orderby can be ordered by firstName, lastName, createTime
      * @param searchPhrase we check in firstName, lastName or nickname
-     * Whitelist: Strips out unknown fields automaticall
-     * Forbid Non-Whitelisted: Rejects requests with extra fields.
      * @returns 
      */
     @Get()
@@ -29,17 +27,15 @@ export class UsersController {
     /**
      * Create New user 
      * @param createUserDto 
-     * tRansform Converts query parameters to correct types.
      * @returns userId or error
      */
     @Post()
-    @UsePipes(new ValidationPipe({ transform: true }))
+    @HttpCode(HttpStatus.CREATED)
+    @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
     async createUser(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
       const user = await this.usersService.createUser(createUserDto);
-      res.status(HttpStatus.CREATED).json({ userId: user.userId });
+      return { userId: user.userId };
     }
-
-    // what to do with 500 if user exists 
 
 
 }

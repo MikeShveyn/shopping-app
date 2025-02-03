@@ -45,6 +45,18 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+
+## Populate and Delete Tables after project was running
+
+```bash
+# run from the main folder to populate 
+$ npx ts-node src/populate-db.ts
+
+# run from the main folder to drop data 
+$ npx ts-node src/clear-db.ts
+
+```
+
 ## Run tests
 
 ```bash
